@@ -5,7 +5,11 @@ import org.flywaydb.core.Flyway
 
 fun Application.runFlyway() {
     Flyway.configure()
-        .dataSource("jdbc:postgresql://localhost:5432/todolist", "postgres", "postgres")
+        .dataSource(
+            "jdbc:postgresql://localhost:5432/todolist",
+            "postgres",
+            "postgres"
+        )
         .load()
         .migrate()
 }

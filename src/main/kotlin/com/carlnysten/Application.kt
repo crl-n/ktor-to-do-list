@@ -1,5 +1,6 @@
 package com.carlnysten
 
+import com.carlnysten.plugins.configureDatabase
 import com.carlnysten.plugins.configureRouting
 import com.carlnysten.plugins.configureSecurity
 import com.carlnysten.plugins.configureSerialization
@@ -14,5 +15,6 @@ fun Application.module() {
     configureSecurity()
     configureSerialization()
     configureRouting()
+    configureDatabase()
     runFlyway()
 }

@@ -5,7 +5,7 @@ import io.ktor.server.auth.*
 
 fun Application.configureSecurity() {
     authentication {
-        basic(name = "basic-auth") {
+        basic(name = "auth-basic") {
             realm = "Todolist API"
             validate { credentials ->
                 if (credentials.name == credentials.password) {
