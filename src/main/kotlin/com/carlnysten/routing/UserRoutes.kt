@@ -15,7 +15,7 @@ fun Route.addUserRoutes() {
         post {
             val createUserDTO = call.receive<CreateUserDTO>()
             userRepository.add(createUserDTO)
-            call.respond(HttpStatusCode.Created)
+            call.respond(HttpStatusCode.Created, "User successfully created")
         }
         authenticate("auth-basic") {
             get {

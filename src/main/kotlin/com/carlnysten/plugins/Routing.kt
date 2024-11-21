@@ -1,5 +1,6 @@
 package com.carlnysten.plugins
 
+import com.carlnysten.routing.addTaskRoutes
 import com.carlnysten.routing.addUserRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -15,5 +16,6 @@ fun Application.configureRouting() {
     }
     routing {
         addUserRoutes()
+        addTaskRoutes()
     }
 }

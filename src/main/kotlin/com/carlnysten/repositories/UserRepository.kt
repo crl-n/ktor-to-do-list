@@ -15,6 +15,14 @@ class UserRepository {
         }
     }
 
+    fun findByUsername(username: String): User? {
+        return transaction {
+            UserDAO.find { UserTable.username eq username }
+                .firstOrNull()
+                ?.let(User::from)
+        }
+    }
+
     fun validateCredentials(username: String, password: String): Boolean {
         return transaction {
             val passwordEncoded = Base64.getEncoder()
@@ -35,7 +43,7 @@ class UserRepository {
                 username = dto.username
                 passwordEncoded = Base64.getEncoder()
                     .encodeToString(dto.password.toByteArray())
-            }.let { User.from(it) }
+            }.let(User::from)
         }
     }
 }
