@@ -2,15 +2,18 @@ package com.carlnysten.routing
 
 import com.carlnysten.models.dto.CreateTaskDTO
 import com.carlnysten.repositories.TaskRepository
+import com.carlnysten.repositories.UserRepository
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-
-val taskRepository = TaskRepository()
+import org.koin.ktor.ext.inject
 
 fun Route.addTaskRoutes() {
+    val taskRepository by application.inject<TaskRepository>()
+    val userRepository by application.inject<UserRepository>()
+
     route("/tasks") {
         authenticate("auth-basic") {
             post {

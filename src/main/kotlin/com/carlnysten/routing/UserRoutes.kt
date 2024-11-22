@@ -7,10 +7,11 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-
-val userRepository = UserRepository()
+import org.koin.ktor.ext.inject
 
 fun Route.addUserRoutes() {
+    val userRepository by application.inject<UserRepository>()
+
     route("users") {
         post {
             val createUserDTO = call.receive<CreateUserDTO>()

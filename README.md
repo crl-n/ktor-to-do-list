@@ -1,5 +1,5 @@
 # Ktor Todolist
-A humble Todolist api. Kotlin, Ktor, PostgreSQL, Flyway and more.
+A humble Todolist api. Kotlin, Ktor, Koin, PostgreSQL, Flyway and more.
 
 ## Database
 Create new Postgres database instance:

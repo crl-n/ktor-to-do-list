@@ -1,10 +1,6 @@
 package com.carlnysten
 
-import com.carlnysten.plugins.configureDatabase
-import com.carlnysten.plugins.configureRouting
-import com.carlnysten.plugins.configureSecurity
-import com.carlnysten.plugins.configureSerialization
-import com.carlnysten.plugins.runFlyway
+import com.carlnysten.plugins.*
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -12,6 +8,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    configureKoin()
     configureSecurity()
     configureSerialization()
     configureRouting()

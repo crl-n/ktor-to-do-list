@@ -3,10 +3,11 @@ package com.carlnysten.plugins
 import com.carlnysten.repositories.UserRepository
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-
-val userRepository = UserRepository()
+import org.koin.ktor.ext.inject
 
 fun Application.configureSecurity() {
+    val userRepository by inject<UserRepository>()
+
     authentication {
         basic(name = "auth-basic") {
             realm = "Todolist API"
