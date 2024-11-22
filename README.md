@@ -28,9 +28,14 @@ Get all users
 http :8080/users Authorization:'Basic '$(echo -n 'user:pw' | base64)
 ```
 
-Add a task for a user
+Add a task
 ```shell
 http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
   name='Make a Todolist app' \
   description='Make a Todolist app with Ktor to learn Kotlin backend development'
+```
+
+Get all tasks
+```shell
+http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64)
 ```
