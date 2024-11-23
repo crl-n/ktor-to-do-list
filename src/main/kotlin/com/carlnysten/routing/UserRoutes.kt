@@ -1,6 +1,7 @@
 package com.carlnysten.routing
 
 import com.carlnysten.models.dto.CreateUserDTO
+import com.carlnysten.plugins.getAuthenticatedUser
 import com.carlnysten.repositories.UserRepository
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -22,6 +23,18 @@ fun Route.addUserRoutes() {
             get {
                 val users = userRepository.findAll()
                 call.respond(HttpStatusCode.OK, users)
+            }
+
+            delete("/me") {
+                val user = call.getAuthenticatedUser()
+
+                if (user == null) {
+                    call.respond(HttpStatusCode.Unauthorized, "User does not exist")
+                    return@delete
+                }
+
+                userRepository.deleteById(user.id)
+                call.respond(HttpStatusCode.NoContent)
             }
         }
     }

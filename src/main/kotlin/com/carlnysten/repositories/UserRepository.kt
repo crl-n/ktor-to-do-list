@@ -4,7 +4,9 @@ import com.carlnysten.models.dao.UserDAO
 import com.carlnysten.models.dao.UserTable
 import com.carlnysten.models.domain.User
 import com.carlnysten.models.dto.CreateUserDTO
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.Base64
 
@@ -44,6 +46,14 @@ class UserRepository {
                 passwordEncoded = Base64.getEncoder()
                     .encodeToString(dto.password.toByteArray())
             }.let(User::from)
+        }
+    }
+
+    fun deleteById(userId: Int) {
+        return transaction {
+            UserTable.deleteWhere {
+                UserTable.id eq userId
+            }
         }
     }
 }

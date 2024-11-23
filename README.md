@@ -69,3 +69,8 @@ http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
   description='Make a Todolist app with Ktor to learn Kotlin backend development' \
   collectionId=1
 ```
+
+Delete authenticated user
+```shell
+http DELETE :8080/users/me Authorization:'Basic '$(echo -n 'user:pw' | base64)
+```
