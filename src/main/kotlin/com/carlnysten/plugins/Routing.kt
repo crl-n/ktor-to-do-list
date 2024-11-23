@@ -1,5 +1,6 @@
 package com.carlnysten.plugins
 
+import com.carlnysten.routing.addHealthRoutes
 import com.carlnysten.routing.addTaskCollectionRoutes
 import com.carlnysten.routing.addTaskRoutes
 import com.carlnysten.routing.addUserRoutes
@@ -16,6 +17,7 @@ fun Application.configureRouting() {
         }
     }
     routing {
+        addHealthRoutes()
         addUserRoutes()
         addTaskCollectionRoutes()
         addTaskRoutes()
