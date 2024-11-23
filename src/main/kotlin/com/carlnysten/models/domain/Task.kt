@@ -7,8 +7,9 @@ import kotlinx.serialization.Serializable
 data class Task(
     val id: Int,
     val name: String,
-    val description: String,
-    val userId: Int
+    val description: String?,
+    val userId: Int,
+    val collectionId: Int?
 ) {
     companion object {
         fun from(dao: TaskDAO): Task {
@@ -16,7 +17,8 @@ data class Task(
                 dao.id.value,
                 dao.name,
                 dao.description,
-                dao.userId
+                dao.userId,
+                dao.collectionId
             )
         }
     }
