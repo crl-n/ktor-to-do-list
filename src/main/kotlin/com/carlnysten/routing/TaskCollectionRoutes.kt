@@ -1,6 +1,7 @@
 package com.carlnysten.routing
 
 import com.carlnysten.models.dto.CreateTaskCollectionDTO
+import com.carlnysten.models.dto.TaskCollectionResponseDTO
 import com.carlnysten.plugins.getAuthenticatedUser
 import com.carlnysten.repositories.TaskCollectionRepository
 import io.ktor.http.*
@@ -24,7 +25,8 @@ fun Route.addTaskCollectionRoutes() {
                 }
 
                 val collections = taskCollectionRepository.findAllByUserId(user.id)
-                call.respond(HttpStatusCode.OK, collections)
+                val collectionDtos = collections.map(TaskCollectionResponseDTO::from)
+                call.respond(HttpStatusCode.OK, collectionDtos)
             }
 
             post {

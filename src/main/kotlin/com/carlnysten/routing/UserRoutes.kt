@@ -1,6 +1,7 @@
 package com.carlnysten.routing
 
 import com.carlnysten.models.dto.CreateUserDTO
+import com.carlnysten.models.dto.UserResponseDTO
 import com.carlnysten.plugins.getAuthenticatedUser
 import com.carlnysten.repositories.UserRepository
 import io.ktor.http.*
@@ -22,7 +23,8 @@ fun Route.addUserRoutes() {
         authenticate("auth-basic") {
             get {
                 val users = userRepository.findAll()
-                call.respond(HttpStatusCode.OK, users)
+                val userDtos = users.map(UserResponseDTO::from)
+                call.respond(HttpStatusCode.OK, userDtos)
             }
 
             delete("/me") {

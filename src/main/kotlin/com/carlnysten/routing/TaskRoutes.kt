@@ -1,6 +1,7 @@
 package com.carlnysten.routing
 
 import com.carlnysten.models.dto.CreateTaskDTO
+import com.carlnysten.models.dto.TaskResponseDTO
 import com.carlnysten.plugins.getAuthenticatedUser
 import com.carlnysten.repositories.TaskRepository
 import io.ktor.http.*
@@ -24,7 +25,8 @@ fun Route.addTaskRoutes() {
                 }
 
                 val tasks = taskRepository.findAllByUserId(user.id)
-                call.respond(HttpStatusCode.OK, tasks)
+                val taskDtos = tasks.map(TaskResponseDTO::from)
+                call.respond(HttpStatusCode.OK, taskDtos)
             }
 
             post {
