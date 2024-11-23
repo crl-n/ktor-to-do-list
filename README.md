@@ -61,3 +61,11 @@ Get all task collections
 ```shell
 http :8080/collections Authorization:'Basic '$(echo -n 'user:pw' | base64)
 ```
+
+Add a new task directly to a task collection
+```shell
+http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
+  name='Make a Todolist app' \
+  description='Make a Todolist app with Ktor to learn Kotlin backend development' \
+  collectionId=1
+```

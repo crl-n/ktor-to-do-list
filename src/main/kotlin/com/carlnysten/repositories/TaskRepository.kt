@@ -20,6 +20,7 @@ class TaskRepository {
                 name = dto.name
                 description = dto.description
                 this.userId = userId
+                this.collectionId = dto.collectionId
             }.let(Task::from)
         }
     }

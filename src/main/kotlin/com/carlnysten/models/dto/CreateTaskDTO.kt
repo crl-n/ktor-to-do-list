@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class CreateTaskDTO(
     val name: String,
     val description: String? = null,
+    val collectionId: Int? = null,
 )
