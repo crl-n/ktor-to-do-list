@@ -39,3 +39,15 @@ Get all tasks
 ```shell
 http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64)
 ```
+
+Add a task collection
+```shell
+http :8080/collections Authorization:'Basic '$(echo -n 'user:pw' | base64) \
+  name='Kotlin backend development' \
+  description='A collection of tasks aimed at learning Kotlin backend development'
+```
+
+Get all task collections
+```shell
+http :8080/collections Authorization:'Basic '$(echo -n 'user:pw' | base64)
+```
