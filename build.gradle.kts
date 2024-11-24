@@ -5,6 +5,7 @@ val logback_version: String by project
 val postgres_version: String by project
 val flyway_version: String by project
 val koin_version: String by project
+val test_containers_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -54,4 +55,8 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-server-test-host-jvm")
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
+    testImplementation("org.testcontainers:testcontainers:$test_containers_version")
+    testImplementation("org.testcontainers:junit-jupiter:$test_containers_version")
+    testImplementation("org.testcontainers:postgresql:$test_containers_version")
 }

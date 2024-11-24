@@ -1,5 +1,5 @@
 # Ktor Todolist
-A humble Todolist api. Kotlin, Ktor, Koin, PostgreSQL, Gradle, Flyway and more.
+A humble Todolist api. Kotlin, Ktor, Koin, PostgreSQL, Gradle, Flyway, Test Containers and more.
 
 <img src="https://skillicons.dev/icons?i=kotlin,ktor,postgres,gradle" />
 
