@@ -29,6 +29,8 @@ Ensure database is up and running, then execute:
 ```
 
 ### Test
+Note that tests use Test Containers and therefore rely on Docker.  
+Ensure that Docker is up and running, then execute:
 ```shell
 ./gradlew test
 ```
