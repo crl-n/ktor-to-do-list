@@ -1,10 +1,16 @@
 package com.carlnysten.routing
 
 import com.carlnysten.config.DatabaseConfig
+import com.carlnysten.models.dto.CreateUserDTO
+import com.carlnysten.models.dto.UserResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.UserRepository
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.testcontainers.containers.PostgreSQLContainer
@@ -28,22 +34,26 @@ class UserRoutesTest : KoinTest {
         start()
     }
 
-    @Test
-    fun `post user endpoint adds a new user to Postgres with correct values`() = testApplication {
+    private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(
             jdbcUrl = postgresContainer.jdbcUrl,
             user = postgresContainer.username,
             password = postgresContainer.password
         )
+        configureKoin()
+        configureSecurity()
+        configureSerialization()
+        routing {
+            addUserRoutes()
+        }
+        configureDatabase(dbConfig)
+        runFlyway(dbConfig)
+    }
+
+    @Test
+    fun `post user endpoint adds a new user to Postgres with correct values`() = testApplication {
         application {
-            configureKoin()
-            configureSecurity()
-            configureSerialization()
-            routing {
-                addUserRoutes()
-            }
-            configureDatabase(dbConfig)
-            runFlyway(dbConfig)
+            configureTestApplication()
         }
 
         val response = client.post("/users") {
@@ -63,5 +73,30 @@ class UserRoutesTest : KoinTest {
         val user = userRepository.findByUsername("user")
         assertNotNull(user)
         assertEquals(Base64.getEncoder().encodeToString("pw".toByteArray()), user.passwordEncoded)
+    }
+
+    @Test
+    fun `get users endpoint returns all users from db`() = testApplication {
+        application {
+            configureTestApplication()
+            userRepository.add(CreateUserDTO("user1", "pw"))
+            userRepository.add(CreateUserDTO("user2", "pw"))
+            userRepository.add(CreateUserDTO("user3", "pw"))
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.get("/users") {
+            contentType(ContentType.Application.Json)
+            basicAuth("user1", "pw")
+        }
+        val responseData: List<UserResponseDTO> = response.body()
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals(3, responseData.size)
     }
 }

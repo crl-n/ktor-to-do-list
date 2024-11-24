@@ -54,6 +54,7 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
 
     testImplementation(kotlin("test"))
+    testImplementation("io.ktor:ktor-client-content-negotiation")
     testImplementation("io.ktor:ktor-server-test-host-jvm")
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
     testImplementation("org.testcontainers:testcontainers:$test_containers_version")
