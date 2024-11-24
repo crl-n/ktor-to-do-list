@@ -19,26 +19,18 @@ fun Route.addTaskCollectionRoutes() {
             get {
                 val user = call.getAuthenticatedUser()
 
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized)
-                    return@get
-                }
-
                 val collections = taskCollectionRepository.findAllByUserId(user.id)
-                val collectionDtos = collections.map(TaskCollectionResponseDTO::from)
-                call.respond(HttpStatusCode.OK, collectionDtos)
+                    .map(TaskCollectionResponseDTO::from)
+
+                call.respond(HttpStatusCode.OK, collections)
             }
 
             post {
                 val user = call.getAuthenticatedUser()
                 val createCollectionDto = call.receive<CreateTaskCollectionDTO>()
 
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized)
-                    return@post
-                }
-
                 taskCollectionRepository.addForUserId(user.id, createCollectionDto)
+
                 call.respond(HttpStatusCode.Created, "Task collection successfully created")
             }
         }

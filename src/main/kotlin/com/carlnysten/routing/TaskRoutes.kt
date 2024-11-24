@@ -19,26 +19,18 @@ fun Route.addTaskRoutes() {
             get {
                 val user = call.getAuthenticatedUser()
 
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized, "User doesn't exist")
-                    return@get
-                }
-
                 val tasks = taskRepository.findAllByUserId(user.id)
-                val taskDtos = tasks.map(TaskResponseDTO::from)
-                call.respond(HttpStatusCode.OK, taskDtos)
+                    .map(TaskResponseDTO::from)
+
+                call.respond(HttpStatusCode.OK, tasks)
             }
 
             post {
                 val createTaskDTO = call.receive<CreateTaskDTO>()
                 val user = call.getAuthenticatedUser()
 
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized, "User doesn't exist")
-                    return@post
-                }
-
                 taskRepository.addForUserId(createTaskDTO, user.id)
+
                 call.respond(HttpStatusCode.Created, "Task successfully created")
             }
         }

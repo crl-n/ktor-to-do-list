@@ -1,11 +1,10 @@
 package com.carlnysten.plugins
 
+import com.carlnysten.exceptions.AuthenticationException
 import com.carlnysten.models.domain.User
 import com.carlnysten.repositories.UserRepository
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
 
 fun Application.configureSecurity() {
@@ -30,9 +29,13 @@ fun Application.configureSecurity() {
     }
 }
 
-fun ApplicationCall.getAuthenticatedUser(): User? {
+fun ApplicationCall.getAuthenticatedUser(): User {
     val userRepository by application.inject<UserRepository>()
-    val principal = principal<UserIdPrincipal>() ?: return null
-    val username = principal.name
-    return userRepository.findByUsername(username)
+    val principal = principal<UserIdPrincipal>()
+        ?: throw AuthenticationException("Null principal")
+
+    val user = userRepository.findByUsername(principal.name)
+        ?: throw AuthenticationException("Authenticated user ${principal.name} not found")
+
+    return user
 }

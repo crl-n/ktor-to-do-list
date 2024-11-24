@@ -17,25 +17,24 @@ fun Route.addUserRoutes() {
     route("users") {
         post {
             val createUserDTO = call.receive<CreateUserDTO>()
+
             userRepository.add(createUserDTO)
+
             call.respond(HttpStatusCode.Created, "User successfully created")
         }
         authenticate("auth-basic") {
             get {
                 val users = userRepository.findAll()
-                val userDtos = users.map(UserResponseDTO::from)
-                call.respond(HttpStatusCode.OK, userDtos)
+                    .map(UserResponseDTO::from)
+
+                call.respond(HttpStatusCode.OK, users)
             }
 
             delete("/me") {
                 val user = call.getAuthenticatedUser()
 
-                if (user == null) {
-                    call.respond(HttpStatusCode.Unauthorized, "User does not exist")
-                    return@delete
-                }
-
                 userRepository.deleteById(user.id)
+
                 call.respond(HttpStatusCode.NoContent)
             }
         }
