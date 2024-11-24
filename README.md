@@ -17,5 +17,21 @@ docker run --detach --rm \
   postgres:17.1
 ```
 
+### Build
+```shell
+./gradlew build
+```
+
+### Run
+Ensure database is up and running, then execute:
+```shell
+./gradlew run
+```
+
+### Test
+```shell
+./gradlew test
+```
+
 ## Example Requests
 You can find example requests for testing the api in [REQUESTS.md](REQUESTS.md).
