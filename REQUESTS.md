@@ -57,6 +57,12 @@ http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
   collectionId=1
 ```
 
+Add existing task to existing collection
+```shell
+http :8080/collections/1/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
+  taskId=1
+```
+
 Delete authenticated user
 ```shell
 http DELETE :8080/users/me Authorization:'Basic '$(echo -n 'user:pw' | base64)
