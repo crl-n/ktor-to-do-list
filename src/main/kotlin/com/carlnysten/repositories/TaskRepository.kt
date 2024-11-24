@@ -4,7 +4,6 @@ import com.carlnysten.models.dao.TaskDAO
 import com.carlnysten.models.dao.TaskTable
 import com.carlnysten.models.domain.Task
 import com.carlnysten.models.dto.CreateTaskDTO
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update

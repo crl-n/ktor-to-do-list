@@ -27,12 +27,13 @@ class UserRoutesTest : KoinTest {
     private val userRepository: UserRepository by inject()
 
     @Container
-    private val postgresContainer = PostgreSQLContainer<Nothing>("postgres:17.1").apply {
-        withDatabaseName("todolist")
-        withUsername("postgres")
-        withPassword("postgres")
-        start()
-    }
+    private val postgresContainer = PostgreSQLContainer<Nothing>("postgres:17.1")
+        .apply {
+            withDatabaseName("todolist")
+            withUsername("postgres")
+            withPassword("postgres")
+            start()
+        }
 
     private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(
@@ -98,5 +99,79 @@ class UserRoutesTest : KoinTest {
 
         assertEquals(HttpStatusCode.OK, response.status)
         assertEquals(3, responseData.size)
+    }
+
+    @Test
+    fun `get users endpoint does not return users to unauthenticated user`() = testApplication {
+        application {
+            configureTestApplication()
+            userRepository.add(CreateUserDTO("user1", "pw"))
+            userRepository.add(CreateUserDTO("user2", "pw"))
+            userRepository.add(CreateUserDTO("user3", "pw"))
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.get("/users") {
+            contentType(ContentType.Application.Json)
+        }
+
+        assertEquals(HttpStatusCode.Unauthorized, response.status)
+    }
+
+    @Test
+    fun `delete me endpoint deletes authenticated user`() = testApplication {
+        application {
+            configureTestApplication()
+            userRepository.add(CreateUserDTO("user", "pw"))
+
+            // Precondition: There should be one user before removal
+            val allUsersBefore = userRepository.findAll()
+            assertEquals(1, allUsersBefore.size)
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.delete("/users/me") {
+            basicAuth("user", "pw")
+        }
+
+        assertEquals(HttpStatusCode.NoContent, response.status)
+        // Post-condition: Since there was 1 user before deletion, there should now be 0
+        val allUsers = userRepository.findAll()
+        assertEquals(0, allUsers.size)
+    }
+
+    @Test
+    fun `delete me endpoint does not accept unauthenticated requests`() = testApplication {
+        application {
+            configureTestApplication()
+            userRepository.add(CreateUserDTO("user", "pw"))
+
+            // Precondition: There should be one user before removal
+            val allUsersBefore = userRepository.findAll()
+            assertEquals(1, allUsersBefore.size)
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.delete("/users/me")
+
+        assertEquals(HttpStatusCode.Unauthorized, response.status)
+        // Post-condition: There should still be 1 user after request
+        val allUsers = userRepository.findAll()
+        assertEquals(1, allUsers.size)
     }
 }
