@@ -9,6 +9,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class TaskRepository {
+    fun findByUserId(taskId: Int): Task? {
+        return transaction {
+            TaskDAO.findById(taskId)?.let(Task::from)
+        }
+    }
+
     fun findAllByUserId(userId: Int): List<Task> {
         return transaction {
             TaskDAO.find { TaskTable.userId eq userId }
