@@ -14,20 +14,28 @@ import org.koin.ktor.ext.inject
 fun Route.addUserRoutes() {
     val userRepository by application.inject<UserRepository>()
 
-    route("users") {
+    route("/users") {
         post {
             val createUserDTO = call.receive<CreateUserDTO>()
-
             userRepository.add(createUserDTO)
 
             call.respond(HttpStatusCode.Created, "User successfully created")
         }
+
         authenticate("auth-basic") {
             get {
                 val users = userRepository.findAll()
                     .map(UserResponseDTO::from)
 
                 call.respond(HttpStatusCode.OK, users)
+            }
+
+            get("/me") {
+                val user = UserResponseDTO.from(
+                    call.getAuthenticatedUser()
+                )
+
+                call.respond(HttpStatusCode.OK, user)
             }
 
             delete("/me") {

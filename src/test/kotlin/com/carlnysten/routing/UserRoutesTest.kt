@@ -124,6 +124,28 @@ class UserRoutesTest : KoinTest {
     }
 
     @Test
+    fun `get me endpoint returns authenticated user`() = testApplication {
+        application {
+            configureTestApplication()
+            userRepository.add(CreateUserDTO("user", "pw"))
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.get("/users/me") {
+            basicAuth("user", "pw")
+        }
+        val responseData: UserResponseDTO = response.body()
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("user", responseData.username)
+    }
+
+    @Test
     fun `delete me endpoint deletes authenticated user`() = testApplication {
         application {
             configureTestApplication()
