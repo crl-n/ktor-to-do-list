@@ -1,5 +1,6 @@
 package com.carlnysten.repositories
 
+import com.carlnysten.enum.TaskPriority
 import com.carlnysten.models.dao.TaskDAO
 import com.carlnysten.models.dao.TaskTable
 import com.carlnysten.models.domain.Task
@@ -9,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class TaskRepository {
-    fun findByUserId(taskId: Int): Task? {
+    fun findByTaskId(taskId: Int): Task? {
         return transaction {
             TaskDAO.findById(taskId)?.let(Task::from)
         }
@@ -29,6 +30,7 @@ class TaskRepository {
                 description = dto.description
                 this.userId = userId
                 this.collectionId = dto.collectionId
+                this.priority = dto.priority ?: TaskPriority.Normal
             }.let(Task::from)
         }
     }

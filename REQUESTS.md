@@ -20,11 +20,12 @@ Add a task
 http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) name='Learn Ktor'
 ```
 
-Add a task with description
+Add a task with description and priority
 ```shell
 http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64) \
   name='Make a Todolist app' \
-  description='Make a Todolist app with Ktor to learn Kotlin backend development'
+  description='Make a Todolist app with Ktor to learn Kotlin backend development' \
+  priority='high'
 ```
 
 Get all tasks

@@ -1,5 +1,6 @@
 package com.carlnysten.models.domain
 
+import com.carlnysten.enum.TaskPriority
 import com.carlnysten.models.dao.TaskDAO
 import kotlinx.serialization.Serializable
 
@@ -9,7 +10,8 @@ data class Task(
     val name: String,
     val description: String?,
     val userId: Int,
-    val collectionId: Int?
+    val collectionId: Int?,
+    val priority: TaskPriority
 ) {
     companion object {
         fun from(dao: TaskDAO): Task {
@@ -18,7 +20,8 @@ data class Task(
                 dao.name,
                 dao.description,
                 dao.userId,
-                dao.collectionId
+                dao.collectionId,
+                dao.priority
             )
         }
     }
