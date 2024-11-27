@@ -4,12 +4,17 @@ import com.carlnysten.config.DatabaseConfig
 import com.carlnysten.enum.TaskPriority
 import com.carlnysten.models.domain.Task
 import com.carlnysten.models.domain.User
+import com.carlnysten.models.dto.CreateTaskDTO
 import com.carlnysten.models.dto.CreateUserDTO
+import com.carlnysten.models.dto.TaskResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.TaskRepository
 import com.carlnysten.repositories.UserRepository
+import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
@@ -18,10 +23,7 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import kotlin.test.*
 
 class TaskRoutesTest : KoinTest {
 
@@ -157,5 +159,167 @@ class TaskRoutesTest : KoinTest {
         val taskRepository by inject<TaskRepository>()
         val tasks = taskRepository.findAllByUserId(1)
         assertEquals(listOf<Task>(), tasks)
+    }
+
+    @Test
+    fun `patch task endpoint should update task correctly`() = testApplication {
+        application {
+            configureTestApplication()
+
+            // Add test user to database
+            val userRepository by inject<UserRepository>()
+            val addedUser = userRepository.add(CreateUserDTO(
+                "user",
+                "pw"
+            ))
+
+            // Add test task to database
+            val taskRepository by inject<TaskRepository>()
+            val addedTask = taskRepository.addForUserId(
+                CreateTaskDTO(
+                    name = "Test task",
+                    description = "Test description",
+                    priority = TaskPriority.High,
+                ),
+                addedUser.id
+            )
+
+            // Pre-condition: Task id should be 1
+            assertEquals(1, addedTask.id)
+        }
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val response = client.patch("/tasks/1") {
+            contentType(ContentType.Application.Json)
+            basicAuth("user", "pw")
+            setBody(
+                """
+                    {
+                        "name": "Patched name",
+                        "description": "Patched description",
+                        "priority": "low"
+                    }
+                """.trimIndent()
+            )
+        }
+
+        assertEquals(HttpStatusCode.OK, response.status)
+
+        // Response data should have updated values
+        val data: TaskResponseDTO = response.body()
+        assertEquals("Patched name", data.name)
+        assertEquals("Patched description", data.description)
+        assertEquals(TaskPriority.Low, data.priority)
+
+        // Task in database should have updated values
+        val taskRepository by inject<TaskRepository>()
+        val updatedTask = taskRepository.findByTaskId(1)
+        assertEquals("Patched name", updatedTask?.name)
+        assertEquals("Patched description", updatedTask?.description)
+        assertEquals(TaskPriority.Low, updatedTask?.priority)
+    }
+
+    @Test
+    fun `patch task endpoint should allow patching of only task priority`() = testApplication {
+        application {
+            configureTestApplication()
+
+            // Add test user to database
+            val userRepository by inject<UserRepository>()
+            val addedUser = userRepository.add(CreateUserDTO(
+                "user",
+                "pw"
+            ))
+
+            // Add test task to database
+            val taskRepository by inject<TaskRepository>()
+            val addedTask = taskRepository.addForUserId(
+                CreateTaskDTO(
+                    name = "Test task",
+                    description = "Test description",
+                    priority = TaskPriority.High,
+                ),
+                addedUser.id
+            )
+
+            // Pre-condition: Task id should be 1
+            assertEquals(1, addedTask.id)
+        }
+
+        val response = client.patch("/tasks/1") {
+            contentType(ContentType.Application.Json)
+            basicAuth("user", "pw")
+            setBody(
+                """
+                    {
+                        "priority": "low"
+                    }
+                """.trimIndent()
+            )
+        }
+
+        assertEquals(HttpStatusCode.OK, response.status)
+
+        // Task in database should have updated values
+        val taskRepository by inject<TaskRepository>()
+        val updatedTask = taskRepository.findByTaskId(1)
+        assertEquals("Test task", updatedTask?.name)
+        assertEquals("Test description", updatedTask?.description)
+        assertEquals(TaskPriority.Low, updatedTask?.priority)
+    }
+
+    @Test
+    fun `patch task endpoint should not update task if request priority is invalid`() = testApplication {
+        application {
+            configureTestApplication()
+
+            // Add test user to database
+            val userRepository by inject<UserRepository>()
+            val addedUser = userRepository.add(CreateUserDTO(
+                "user",
+                "pw"
+            ))
+
+            // Add test task to database
+            val taskRepository by inject<TaskRepository>()
+            val addedTask = taskRepository.addForUserId(
+                CreateTaskDTO(
+                    name = "Test task",
+                    description = "Test description",
+                    priority = TaskPriority.High,
+                ),
+                addedUser.id
+            )
+
+            // Pre-condition: Task id should be 1
+            assertEquals(1, addedTask.id)
+        }
+
+        val response = client.patch("/tasks/1") {
+            contentType(ContentType.Application.Json)
+            basicAuth("user", "pw")
+            setBody(
+                """
+                    {
+                        "name": "Patched name",
+                        "description": "Patched description",
+                        "priority": "mega-super-high"
+                    }
+                """.trimIndent()
+            )
+        }
+
+        assertEquals(HttpStatusCode.BadRequest, response.status)
+
+        val taskRepository by inject<TaskRepository>()
+        val updatedTask = taskRepository.findByTaskId(1)
+        assertEquals("Test task", updatedTask?.name)
+        assertEquals("Test description", updatedTask?.description)
+        assertEquals(TaskPriority.High, updatedTask?.priority)
     }
 }

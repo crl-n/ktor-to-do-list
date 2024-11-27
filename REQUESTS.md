@@ -33,6 +33,11 @@ Get all tasks
 http :8080/tasks Authorization:'Basic '$(echo -n 'user:pw' | base64)
 ```
 
+Modify a task's priority
+```shell
+http patch :8080/tasks/1 Authorization:'Basic '$(echo -n 'user:pw' | base64) priority='high'
+```
+
 Add a task collection
 ```shell
 http :8080/collections Authorization:'Basic '$(echo -n 'user:pw' | base64) name='Kotlin backend development'

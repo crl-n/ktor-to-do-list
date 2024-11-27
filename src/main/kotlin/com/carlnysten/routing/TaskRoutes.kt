@@ -1,6 +1,8 @@
 package com.carlnysten.routing
 
+import com.carlnysten.models.domain.Task
 import com.carlnysten.models.dto.CreateTaskDTO
+import com.carlnysten.models.dto.PatchTaskDTO
 import com.carlnysten.models.dto.TaskResponseDTO
 import com.carlnysten.plugins.getAuthenticatedUser
 import com.carlnysten.repositories.TaskRepository
@@ -32,6 +34,19 @@ fun Route.addTaskRoutes() {
                 taskRepository.addForUserId(createTaskDTO, user.id)
 
                 call.respond(HttpStatusCode.Created, "Task successfully created")
+            }
+
+            patch("/{taskId}") {
+                val taskId = call.parameters["taskId"]?.toIntOrNull()
+                    ?: return@patch call.respond(HttpStatusCode.BadRequest)
+
+                val patchTaskDto = call.receive<PatchTaskDTO>()
+
+                val updatedTask = taskRepository.updateByTaskId(taskId, patchTaskDto)
+                    ?.let(TaskResponseDTO::from)
+                    ?: return@patch call.respond(HttpStatusCode.InternalServerError)
+
+                call.respond(HttpStatusCode.OK, updatedTask)
             }
         }
     }
