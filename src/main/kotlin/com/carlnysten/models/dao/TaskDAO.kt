@@ -1,6 +1,7 @@
 package com.carlnysten.models.dao
 
 import com.carlnysten.enum.TaskPriority
+import com.carlnysten.enum.TaskStatus
 import com.carlnysten.util.PGEnum
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -19,6 +20,12 @@ object TaskTable: IntIdTable("app.tasks") {
         fromDb = { value -> TaskPriority.valueOf((value as String).replaceFirstChar { it.uppercase() }) },
         toDb = { PGEnum("task_priority", it) }
     ).default(TaskPriority.Normal)
+    val status: Column<TaskStatus> = customEnumeration(
+        name = "status",
+        sql ="task_status",
+        fromDb = { value -> TaskStatus.valueOf((value as String).replaceFirstChar { it.uppercase() }) },
+        toDb = { PGEnum("task_status", it) }
+    ).default(TaskStatus.Pending)
 }
 
 class TaskDAO(id: EntityID<Int>): IntEntity(id) {
@@ -29,4 +36,5 @@ class TaskDAO(id: EntityID<Int>): IntEntity(id) {
     var userId by TaskTable.userId
     var collectionId by TaskTable.collectionId
     var priority by TaskTable.priority
+    var status by TaskTable.status
 }

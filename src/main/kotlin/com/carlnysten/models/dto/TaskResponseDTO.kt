@@ -1,6 +1,7 @@
 package com.carlnysten.models.dto
 
 import com.carlnysten.enum.TaskPriority
+import com.carlnysten.enum.TaskStatus
 import com.carlnysten.models.domain.Task
 import kotlinx.serialization.Serializable
 
@@ -10,7 +11,8 @@ data class TaskResponseDTO(
     val name: String,
     val description: String?,
     val collectionId: Int?,
-    val priority: TaskPriority
+    val priority: TaskPriority,
+    val status: TaskStatus,
 ) {
     companion object {
         fun from(task: Task) = TaskResponseDTO(
@@ -18,7 +20,8 @@ data class TaskResponseDTO(
             task.name,
             task.description,
             task.collectionId,
-            task.priority
+            task.priority,
+            task.status
         )
     }
 }

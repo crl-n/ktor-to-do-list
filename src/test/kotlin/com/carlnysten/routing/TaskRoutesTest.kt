@@ -2,6 +2,7 @@ package com.carlnysten.routing
 
 import com.carlnysten.config.DatabaseConfig
 import com.carlnysten.enum.TaskPriority
+import com.carlnysten.enum.TaskStatus
 import com.carlnysten.models.domain.Task
 import com.carlnysten.models.domain.User
 import com.carlnysten.models.dto.CreateTaskDTO
@@ -86,6 +87,7 @@ class TaskRoutesTest : KoinTest {
         assertNotNull(task, "Task should not be null after adding task")
         assertEquals(addedUser?.id, task.userId, "Task should add task to authenticated user")
         assertEquals(TaskPriority.Normal, task.priority, "By default task priority should be Normal")
+        assertEquals(TaskStatus.Pending, task.status, "By default task status should be Pending")
     }
 
     @Test
@@ -171,7 +173,8 @@ class TaskRoutesTest : KoinTest {
                     {
                         "name": "Patched name",
                         "description": "Patched description",
-                        "priority": "low"
+                        "priority": "low",
+                        "status": "done"
                     }
                 """.trimIndent()
             )
@@ -184,12 +187,14 @@ class TaskRoutesTest : KoinTest {
         assertEquals("Patched name", data.name)
         assertEquals("Patched description", data.description)
         assertEquals(TaskPriority.Low, data.priority)
+        assertEquals(TaskStatus.Done, data.status)
 
         // Task in database should have updated values
         val updatedTask = taskRepository.findByTaskId(1)
         assertEquals("Patched name", updatedTask?.name)
         assertEquals("Patched description", updatedTask?.description)
         assertEquals(TaskPriority.Low, updatedTask?.priority)
+        assertEquals(TaskStatus.Done, updatedTask?.status)
     }
 
     @Test

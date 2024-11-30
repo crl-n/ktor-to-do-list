@@ -1,6 +1,7 @@
 package com.carlnysten.repositories
 
 import com.carlnysten.enum.TaskPriority
+import com.carlnysten.enum.TaskStatus
 import com.carlnysten.models.dao.TaskDAO
 import com.carlnysten.models.dao.TaskTable
 import com.carlnysten.models.domain.Task
@@ -43,6 +44,7 @@ class TaskRepository {
                 it.name = patchTaskDto.name ?: it.name
                 it.description = patchTaskDto.description ?: it.description
                 it.priority = patchTaskDto.priority ?: it.priority
+                it.status = patchTaskDto.status ?: it.status
             }?.let(Task::from)
         }
     }
