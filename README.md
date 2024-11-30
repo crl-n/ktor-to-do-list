@@ -16,6 +16,10 @@ docker run --detach --rm \
   -p 127.0.0.1:5432:5432 \
   postgres:17.1
 ```
+The command above is also available as a Gradle task:
+```shell
+./gradlew runPostgresOnce
+```
 
 ### Build
 ```shell
