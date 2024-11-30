@@ -7,6 +7,13 @@ val flyway_version: String by project
 val koin_version: String by project
 val test_containers_version: String by project
 
+val postgres_user: String by project
+val postgres_password: String by project
+val postgres_port: String by project
+val postgres_instance_name: String by project
+val postgres_database_name: String by project
+
+
 plugins {
     kotlin("jvm") version "2.0.21"
     id("io.ktor.plugin") version "3.0.1"
@@ -35,11 +42,11 @@ tasks.register("runPostgresOnce") {
         exec {
             commandLine = listOf(
                 "docker", "run", "--detach", "--rm",
-                "--name", "postgresql-ktor-to-do-list",
-                "-e", "POSTGRES_PASSWORD=postgres",
-                "-e", "POSTGRES_USER=postgres",
-                "-e", "POSTGRES_DB=todolist",
-                "-p", "127.0.0.1:5432:5432",
+                "--name", postgres_instance_name,
+                "-e", "POSTGRES_PASSWORD=${postgres_password}",
+                "-e", "POSTGRES_USER=${postgres_user}",
+                "-e", "POSTGRES_DB=${postgres_database_name}",
+                "-p", "127.0.0.1:${postgres_port}:${postgres_port}",
                 "postgres:17.1"
             )
         }
