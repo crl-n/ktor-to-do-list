@@ -10,6 +10,7 @@ import com.carlnysten.models.dto.TaskResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.TaskRepository
 import com.carlnysten.repositories.UserRepository
+import com.carlnysten.testcontainers.getPostgresContainer
 import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -20,7 +21,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import kotlin.test.*
 
@@ -30,13 +30,7 @@ class TaskRoutesTest : KoinTest {
     private val taskRepository by inject<TaskRepository>()
 
     @Container
-    private val postgresContainer = PostgreSQLContainer<Nothing>("postgres:17.1")
-        .apply {
-            withDatabaseName("todolist")
-            withUsername("postgres")
-            withPassword("postgres")
-            start()
-        }
+    private val postgresContainer = getPostgresContainer()
 
     private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(

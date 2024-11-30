@@ -5,6 +5,7 @@ import com.carlnysten.models.dto.CreateUserDTO
 import com.carlnysten.models.dto.UserResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.UserRepository
+import com.carlnysten.testcontainers.getPostgresContainer
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -13,7 +14,6 @@ import io.ktor.server.application.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
-import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -27,13 +27,7 @@ class UserRoutesTest : KoinTest {
     private val userRepository: UserRepository by inject()
 
     @Container
-    private val postgresContainer = PostgreSQLContainer<Nothing>("postgres:17.1")
-        .apply {
-            withDatabaseName("todolist")
-            withUsername("postgres")
-            withPassword("postgres")
-            start()
-        }
+    private val postgresContainer = getPostgresContainer()
 
     private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(
