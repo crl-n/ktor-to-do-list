@@ -12,6 +12,7 @@ import com.carlnysten.plugins.*
 import com.carlnysten.repositories.TaskRepository
 import com.carlnysten.repositories.UserRepository
 import com.carlnysten.testcontainers.getPostgresContainer
+import com.carlnysten.testcontainers.reset
 import com.carlnysten.utils.createClientWithJsonNegotiation
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -19,11 +20,14 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.testcontainers.junit.jupiter.Container
 import kotlin.test.*
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskRoutesTest : KoinTest {
 
     private val userRepository by inject<UserRepository>()
@@ -31,6 +35,11 @@ class TaskRoutesTest : KoinTest {
 
     @Container
     private val postgresContainer = getPostgresContainer()
+
+    @AfterEach
+    fun afterEach(): Unit {
+        postgresContainer.reset()
+    }
 
     private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(

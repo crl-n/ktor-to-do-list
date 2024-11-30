@@ -6,6 +6,7 @@ import com.carlnysten.models.dto.UserResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.UserRepository
 import com.carlnysten.testcontainers.getPostgresContainer
+import com.carlnysten.testcontainers.reset
 import com.carlnysten.utils.createClientWithJsonNegotiation
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -13,6 +14,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.TestInstance
 import org.testcontainers.junit.jupiter.Container
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,12 +24,18 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import java.util.Base64
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserRoutesTest : KoinTest {
 
     private val userRepository: UserRepository by inject()
 
     @Container
     private val postgresContainer = getPostgresContainer()
+
+    @AfterEach
+    fun afterEach(): Unit {
+        postgresContainer.reset()
+    }
 
     private fun Application.configureTestApplication() {
         val dbConfig = DatabaseConfig(
