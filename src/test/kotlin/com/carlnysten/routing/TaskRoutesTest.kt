@@ -55,6 +55,10 @@ class TaskRoutesTest : KoinTest {
         ))
     }
 
+    private fun HttpRequestBuilder.setTestUserBasicAuth() {
+        basicAuth("user", "pw")
+    }
+
     @Test
     fun `add task endpoint should add task correctly`() = testApplication {
         var addedUser: User? = null
@@ -70,7 +74,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.post("/tasks") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
@@ -99,7 +103,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.post("/tasks") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
@@ -127,7 +131,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.post("/tasks") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
@@ -167,7 +171,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.patch("/tasks/1") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
@@ -219,7 +223,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.patch("/tasks/1") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
@@ -260,7 +264,7 @@ class TaskRoutesTest : KoinTest {
 
         val response = client.patch("/tasks/1") {
             contentType(ContentType.Application.Json)
-            basicAuth("user", "pw")
+            setTestUserBasicAuth()
             setBody(
                 """
                     {
