@@ -11,11 +11,10 @@ import com.carlnysten.plugins.*
 import com.carlnysten.repositories.TaskRepository
 import com.carlnysten.repositories.UserRepository
 import com.carlnysten.testcontainers.getPostgresContainer
+import com.carlnysten.utils.createClientWithJsonNegotiation
 import io.ktor.client.call.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
@@ -162,11 +161,7 @@ class TaskRoutesTest : KoinTest {
             assertEquals(1, addedTask.id)
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.patch("/tasks/1") {
             contentType(ContentType.Application.Json)

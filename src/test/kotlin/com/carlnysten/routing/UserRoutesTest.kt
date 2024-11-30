@@ -6,12 +6,11 @@ import com.carlnysten.models.dto.UserResponseDTO
 import com.carlnysten.plugins.*
 import com.carlnysten.repositories.UserRepository
 import com.carlnysten.testcontainers.getPostgresContainer
+import com.carlnysten.utils.createClientWithJsonNegotiation
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import org.testcontainers.junit.jupiter.Container
@@ -79,11 +78,7 @@ class UserRoutesTest : KoinTest {
             userRepository.add(CreateUserDTO("user3", "pw"))
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.get("/users") {
             contentType(ContentType.Application.Json)
@@ -104,11 +99,7 @@ class UserRoutesTest : KoinTest {
             userRepository.add(CreateUserDTO("user3", "pw"))
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.get("/users") {
             contentType(ContentType.Application.Json)
@@ -124,11 +115,7 @@ class UserRoutesTest : KoinTest {
             userRepository.add(CreateUserDTO("user", "pw"))
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.get("/users/me") {
             basicAuth("user", "pw")
@@ -150,11 +137,7 @@ class UserRoutesTest : KoinTest {
             assertEquals(1, allUsersBefore.size)
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.delete("/users/me") {
             basicAuth("user", "pw")
@@ -177,11 +160,7 @@ class UserRoutesTest : KoinTest {
             assertEquals(1, allUsersBefore.size)
         }
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        val client = createClientWithJsonNegotiation()
 
         val response = client.delete("/users/me")
 
