@@ -10,6 +10,11 @@ Add a user
 http :8080/users username=user password=pw
 ```
 
+Login using form
+```shell
+http -f :8080/auth/login username=user password=pw
+```
+
 Get all users
 ```shell
 http :8080/users Authorization:'Basic '$(echo -n 'user:pw' | base64)

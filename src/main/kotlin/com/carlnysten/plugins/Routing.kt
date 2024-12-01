@@ -1,10 +1,7 @@
 package com.carlnysten.plugins
 
 import com.carlnysten.exceptions.AuthenticationException
-import com.carlnysten.routing.addHealthRoutes
-import com.carlnysten.routing.addTaskCollectionRoutes
-import com.carlnysten.routing.addTaskRoutes
-import com.carlnysten.routing.addUserRoutes
+import com.carlnysten.routing.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -26,6 +23,7 @@ fun Application.configureRouting() {
     }
     routing {
         addHealthRoutes()
+        addAuthRoutes()
         addUserRoutes()
         addTaskCollectionRoutes()
         addTaskRoutes()
