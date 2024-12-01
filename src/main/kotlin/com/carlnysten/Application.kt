@@ -1,8 +1,10 @@
 package com.carlnysten
 
 import com.carlnysten.config.DatabaseConfig
+import com.carlnysten.models.dto.UserSession
 import com.carlnysten.plugins.*
 import io.ktor.server.application.*
+import io.ktor.server.sessions.*
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -25,6 +27,7 @@ fun Application.module() {
     configureSecurity()
     configureSerialization()
     configureRouting()
+    configureSessions()
     configureDatabase(dbConfig)
     runFlyway(dbConfig)
 }

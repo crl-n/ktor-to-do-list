@@ -39,6 +39,7 @@ class HealthRoutesTest {
             configureKoin()
             configureSecurity()
             configureSerialization()
+            configureSessions()
             routing {
                 addHealthRoutes()
             }

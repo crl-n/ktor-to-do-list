@@ -1,6 +1,5 @@
 package com.carlnysten.routing
 
-import com.carlnysten.models.domain.Task
 import com.carlnysten.models.dto.CreateTaskDTO
 import com.carlnysten.models.dto.PatchTaskDTO
 import com.carlnysten.models.dto.TaskResponseDTO
@@ -17,7 +16,7 @@ fun Route.addTaskRoutes() {
     val taskRepository by application.inject<TaskRepository>()
 
     route("/tasks") {
-        authenticate("auth-basic") {
+        authenticate("auth-basic", "auth-session") {
             get {
                 val user = call.getAuthenticatedUser()
 

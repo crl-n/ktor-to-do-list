@@ -4,15 +4,30 @@
 Example requests are provided as Httpie CLI commands.  
 Install Httpie CLI: https://httpie.io/cli
 
+## Auth
+The api supports both basic authentication and session authentication.
+Examples use basic authentication. To use sessions, remove the Authorization
+header from the http command and use Httpie's named sessions instead:
+
+Login to establish session (user has to be created first, see **Requests**)
+```shell
+http --session=user -f :8080/auth/login username=user password=pw
+```
+
+Authenticate by using the named session
+```shell
+http --session=user :8080/tasks name='Learn Ktor'
+```
+
+Logout to end the session
+```shell
+http --session=user :8080/auth/logout
+```
+
 ## Requests
 Add a user
 ```shell
 http :8080/users username=user password=pw
-```
-
-Login using form
-```shell
-http -f :8080/auth/login username=user password=pw
 ```
 
 Get all users

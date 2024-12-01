@@ -46,6 +46,7 @@ class UserRoutesTest : KoinTest {
         configureKoin()
         configureSecurity()
         configureSerialization()
+        configureSessions()
         routing {
             addUserRoutes()
         }

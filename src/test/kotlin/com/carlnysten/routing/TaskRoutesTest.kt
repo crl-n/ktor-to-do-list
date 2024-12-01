@@ -50,6 +50,7 @@ class TaskRoutesTest : KoinTest {
         configureKoin()
         configureSecurity()
         configureSerialization()
+        configureSessions()
         routing {
             addTaskRoutes()
         }
