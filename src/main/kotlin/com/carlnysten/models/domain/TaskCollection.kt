@@ -1,9 +1,7 @@
 package com.carlnysten.models.domain
 
 import com.carlnysten.models.dao.TaskCollectionDAO
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class TaskCollection(
     val id: Int,
     val name: String,

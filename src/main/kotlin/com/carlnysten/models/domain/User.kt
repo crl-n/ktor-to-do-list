@@ -1,9 +1,7 @@
 package com.carlnysten.models.domain
 
 import com.carlnysten.models.dao.UserDAO
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class User(
     val id: Int,
     val username: String,
