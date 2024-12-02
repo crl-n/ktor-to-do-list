@@ -1,7 +1,7 @@
 # Ktor Todolist
-A humble Todolist api. Kotlin, Ktor, Koin, PostgreSQL, Gradle, Flyway, Test Containers and more.
+A humble Todolist api. Kotlin, Ktor, Koin, PostgreSQL, Redis, Gradle, Flyway, Test Containers and more.
 
-<img src="https://skillicons.dev/icons?i=kotlin,ktor,postgres,gradle" />
+<img src="https://skillicons.dev/icons?i=kotlin,ktor,postgres,gradle,redis" />
 
 ## Running the API
 
@@ -19,6 +19,20 @@ docker run --detach --rm \
 The command above is also available as a Gradle task:
 ```shell
 ./gradlew runPostgresOnce
+```
+
+### Cache setup
+Create a Redis instance using Docker CLI:
+```shell
+docker run --detach --rm \
+  --name redis-ktor-to-do-list \
+  -p 6379:6379 \
+  redis:7.4.1
+```
+
+You can examine the cache by connecting to the Redis instance:
+```shell
+docker exec -it redis-ktor-to-do-list redis-cli
 ```
 
 ### Build

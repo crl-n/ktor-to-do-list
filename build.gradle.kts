@@ -6,12 +6,16 @@ val postgres_version: String by project
 val flyway_version: String by project
 val koin_version: String by project
 val test_containers_version: String by project
+val lettuce_version: String by project
 
 val postgres_user: String by project
 val postgres_password: String by project
 val postgres_port: String by project
 val postgres_instance_name: String by project
 val postgres_database_name: String by project
+
+val redis_instance_name: String by project
+val redis_port: String by project
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -27,6 +31,10 @@ application {
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks.test {
@@ -52,8 +60,20 @@ tasks.register("runPostgresOnce") {
     }
 }
 
-repositories {
-    mavenCentral()
+tasks.register("runRedisOnce") {
+    description = "Creates and runs an ephemeral Redis instance"
+    group = "development"
+
+    doLast {
+        exec {
+            commandLine = listOf(
+                "docker", "run", "--detach", "--rm",
+                "--name", redis_instance_name,
+                "-p", "${redis_port}:${redis_port}",
+                "redis:7.4.1"
+            )
+        }
+    }
 }
 
 dependencies {
@@ -64,6 +84,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
+    implementation("io.lettuce:lettuce-core:$lettuce_version.RELEASE")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")

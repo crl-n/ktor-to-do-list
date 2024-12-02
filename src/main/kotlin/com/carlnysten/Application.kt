@@ -1,8 +1,10 @@
 package com.carlnysten
 
 import com.carlnysten.config.DatabaseConfig
+import com.carlnysten.models.session.RedisSessionStorage
 import com.carlnysten.plugins.*
 import io.ktor.server.application.*
+import io.lettuce.core.RedisClient
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -20,11 +22,15 @@ fun Application.module() {
         password = dbPassword,
     )
 
+    val redisClient = RedisClient.create("redis://localhost:6379/0")
+    val redisConnection = redisClient.connect()
+    val redisSessionStorage = RedisSessionStorage(redisConnection)
+
     configureKoin()
     configureSecurity()
     configureSerialization()
     configureRouting()
-    configureSessions()
+    configureSessions(redisSessionStorage)
     configureDatabase(dbConfig)
     runFlyway(dbConfig)
 }
