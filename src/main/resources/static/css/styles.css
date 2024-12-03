@@ -1,0 +1,45 @@
+:root {
+    --background-color: #F4F6F9;
+    --text-color: #333333;
+}
+
+body {
+    font-family: monospace;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    padding: 20px 60px;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: large;
+}
+
+.task-container {
+    margin: 0 auto;
+}
+
+.task-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 20px 0;
+}
+
+.task-name {
+    font-weight: bold;
+}
+
+.user-container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.user {
+    margin-right: 10px;
+}

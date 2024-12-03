@@ -33,4 +33,5 @@ fun Application.module() {
     configureSessions(redisSessionStorage)
     configureDatabase(dbConfig)
     runFlyway(dbConfig)
+    configureTemplating()
 }

@@ -13,17 +13,28 @@ fun Route.addAuthRoutes() {
         authenticate("auth-form") {
             post("/login") {
                 val user = call.getAuthenticatedUser()
+                val userAgent = call.request.headers["User-Agent"] ?: ""
 
                 call.sessions.set(UserSession(user.id, user.username))
-                call.respond(HttpStatusCode.OK, "Successfully logged in")
-            }
 
+                if (userAgent.startsWith("HTTPie")) {
+                    call.respond(HttpStatusCode.OK, "Successfully logged in")
+                } else {
+                    call.respondRedirect("/")
+                }
+            }
         }
 
         authenticate ("auth-session") {
             get("/logout") {
                 call.sessions.clear<UserSession>()
-                call.respond(HttpStatusCode.OK, "Successfully logged out")
+                val userAgent = call.request.headers["User-Agent"] ?: ""
+
+                if (userAgent.startsWith("HTTPie")) {
+                    call.respond(HttpStatusCode.OK, "Successfully logged out")
+                } else {
+                    call.respondRedirect("/login")
+                }
             }
         }
     }
