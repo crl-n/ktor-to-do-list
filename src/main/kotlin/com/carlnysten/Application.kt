@@ -22,15 +22,16 @@ fun Application.module() {
         password = dbPassword,
     )
 
+    val sessionDurationSeconds: Long = 160
     val redisClient = RedisClient.create("redis://localhost:6379/0")
     val redisConnection = redisClient.connect()
-    val redisSessionStorage = RedisSessionStorage(redisConnection)
+    val redisSessionStorage = RedisSessionStorage(redisConnection, sessionDurationSeconds)
 
     configureKoin()
     configureSecurity()
     configureSerialization()
     configureRouting()
-    configureSessions(redisSessionStorage)
+    configureSessions(redisSessionStorage, sessionDurationSeconds)
     configureDatabase(dbConfig)
     runFlyway(dbConfig)
     configureTemplating()

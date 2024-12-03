@@ -4,7 +4,8 @@ import io.ktor.server.sessions.*
 import io.lettuce.core.api.StatefulRedisConnection
 
 class RedisSessionStorage(
-    private val connection: StatefulRedisConnection<String, String>
+    private val connection: StatefulRedisConnection<String, String>,
+    private val sessionDurationSeconds: Long,
 ) : SessionStorage {
     private val syncCommands = connection.sync()
 
@@ -18,7 +19,6 @@ class RedisSessionStorage(
     }
 
     override suspend fun write(id: String, value: String) {
-        println("$id $value")
-        syncCommands.set(id, value)
+        syncCommands.setex(id, sessionDurationSeconds, value)
     }
 }
