@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ktor Todolist</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-</head>
-<body>
-    <main>
-        <h1>Login</h1>
-        <form method="POST" action="/auth/login">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username">
-            <label for="password">Password</label>
-            <input type="text" id="password" name="password">
-            <input type="submit" />
-        </form>
-    </main>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1>Login</h1>
+    <form method="POST" action="/auth/login">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Password</label>
+        <input type="text" id="password" name="password">
+        <input type="submit" />
+    </form>
+{% endblock %}

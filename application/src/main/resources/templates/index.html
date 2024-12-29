@@ -1,28 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ktor Todolist</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-</head>
-<body>
-    <main>
-        <div class="user-container">
-            <span class="user">Logged in as: {{user.username}}</span>
-            <form method="GET" action="/auth/logout">
-                <button>Logout</button>
-            </form>
-        </div>
-        <div class="task-container">
-            {% for task in tasks %}
-                <div class="task-item">
-                    <span class="task-name">{{ task.name }}</span>
-                    <span>{{ task.description }}</span>
-                    <span>{{ task.priority }}</span>
-                    <span>{{ task.status }}</span>
-                </div>
-            {% endfor %}
-        </div>
-    </main>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="user-container">
+        <span class="user">Logged in as: {{user.username}}</span>
+        <form method="GET" action="/auth/logout">
+            <button>Logout</button>
+        </form>
+    </div>
+    <div class="task-container">
+        {% for task in tasks %}
+            <div class="task-item">
+                <span class="task-name">{{ task.name }}</span>
+                <span>{{ task.description }}</span>
+                <span>{{ task.priority }}</span>
+                <span>{{ task.status }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
